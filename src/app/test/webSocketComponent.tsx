@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
 
-export default function WebSocketComponent() {
+interface WebSocketComponentProps {
+  webSocketURL: string
+}
+
+const WebSocketComponent: React.FC<WebSocketComponentProps> = ({webSocketURL}) => {
   const [messages, setMessages] = useState<string[]>([]);
   const [ws, setWs] = useState<WebSocket | null>(null);
 
   useEffect(() => {
     // Replace with your WebSocket server URL
-    const socket = new WebSocket("ws://localhost:3001");
+    const socket = new WebSocket(webSocketURL);
 
     socket.onopen = () => {
       console.log("WebSocket Connected");
@@ -23,21 +27,7 @@ export default function WebSocketComponent() {
     return () => socket.close(); // Cleanup on unmount
   }, []);
 
-  const sendMessage = () => {
-    if (ws && ws.readyState === WebSocket.OPEN) {
-      ws.send("Hello from Next.js!");
-    }
-  };
-
-  return (
-    <div>
-      <h2>WebSocket Messages</h2>
-      <button onClick={sendMessage}>Send Message</button>
-      <ul>
-        {messages.map((msg, index) => (
-          <li key={index}>{msg}</li>
-        ))}
-      </ul>
-    </div>
-  );
+  return (<div />)
 }
+
+export default WebSocketComponent;

@@ -21,10 +21,22 @@ const AuthBox:React.FC<authBoxProps> = ({currentState}) => {
   useEffect(() => {
     console.log(stateMap);
     if(currentState != null){
-      setStateText(stateMap[currentState])
+      setStateText(stateMap[currentState-1])
     }
   }, [currentState]);
 
+  function auth(){
+    fetch("http://localhost:3000/api/auth?outlet=ccs", {
+      method: 'POST',
+      body: JSON.stringify({
+        user: "Brennan",
+        auth: true,
+        plug_type: "ccs"
+      })
+    })
+    .catch(error => console.error('Error fetching data:', error));
+  }
+  
   return (
     <div className="justify-items-center">
       <input className="mt-2 border-solid border-2 box-border" type="text" placeholder="User Name"></input>
@@ -32,7 +44,7 @@ const AuthBox:React.FC<authBoxProps> = ({currentState}) => {
         <option>CCS</option>
       </select>
       <div className="w-full flex items-center">
-        <button className="w-1/2 bg-green-500 rounded-full m-2">Auth</button>
+        <button className="w-1/2 bg-green-500 rounded-full m-2" onClick={() => auth()}>Auth</button>
         <button className="w-1/2 bg-red-500 rounded-full m-2">Stop</button>
       </div>
       <strong>State:</strong>
