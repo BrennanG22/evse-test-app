@@ -1,3 +1,4 @@
+import Banner from "@/globalComponents/banner";
 import RuleBar from "./ruleBar";
 import RuleTable from "./ruleTable";
 
@@ -5,7 +6,12 @@ const ParentComp = () => {
 
   return (
     <div>
-      <RuleTable/>
+      <div className=" bg-slate-100 h-screen">
+        <Banner />
+        <div className="m-16 h-2/3 border-2 border-black border-solid">
+          <RuleTable />
+        </div>
+      </div>
     </div>
   )
 }

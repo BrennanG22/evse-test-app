@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import MonitorContainer from "./monitorContainer";
 import StatsBox from "./statsBox";
 import webSocketHelper from "./webSocketHelper";
+import Banner from "@/globalComponents/banner";
 
 const ParentComp = () => {
 
@@ -17,7 +18,7 @@ const ParentComp = () => {
 
   useEffect(() => {
     stateSocket = new webSocketHelper("ws://10.20.27.100/api/outlets/ccs/statestream", newMessageCallback);
-    return() => {
+    return () => {
       stateSocket.closeSocket();
     }
   }, []);
@@ -27,20 +28,23 @@ const ParentComp = () => {
 
     setCurrentState(message.phs);
     setCurrent(message.pc);
-    setVoltage(voltage == null ? 0: voltage+1);
+    setVoltage(voltage == null ? 0 : voltage + 1);
     setPowerLimit(message.pLimit);
     //Set current power;
   }
 
 
   return (
-    <div className="w-full flex">
-      <MonitorContainer name="Auth Settings">
-        <AuthBox currentState={currentState} />
-      </MonitorContainer>
-      <MonitorContainer name="Stats">
-        <StatsBox current={current} voltage={voltage} powerLimit={powerLimit} currentPower={currentPower} />
-      </MonitorContainer>
+    <div>
+      <Banner/>
+      <div className="w-full flex">
+        <MonitorContainer name="Auth Settings">
+          <AuthBox currentState={currentState} />
+        </MonitorContainer>
+        <MonitorContainer name="Stats">
+          <StatsBox current={current} voltage={voltage} powerLimit={powerLimit} currentPower={currentPower} />
+        </MonitorContainer>
+      </div>
     </div>
   )
 }
