@@ -16,13 +16,13 @@ interface RuleBarProps {
 const RuleBar: React.FC<RuleBarProps> = ({ data, updateRuleCallback }) => {
 
 
-  const [selectedType, setSelectedType] = useState("read");
-  const [interval, setInterval] = useState("Test");
+  const [selectedType, setSelectedType] = useState(data.type);
+  const [interval, setInterval] = useState(data.interval);
   const [localData, setLocalData] = useState<ruleData>(data);
 
   useEffect(() => {
     localData.interval = interval;
-
+    // console.log(localData)
     updateRuleCallback(localData);
   }, [interval]);
 

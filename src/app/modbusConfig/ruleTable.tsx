@@ -41,12 +41,9 @@ const RuleTable = () => {
       return newRules;
     });
     // setRulesDisplay((prevRules) => [...prevRules, <RuleBar key={tempRule.id} data={tempRule} updateRuleCallback={updateRuleData}/>]);
-    updateRuleRender()
-    
   }
 
   function updateRuleRender(){
-    console.log("Refresh Preformed")
     const tempRulesDisplay:JSX.Element[] = [];
     rules.forEach((rule) => {
       tempRulesDisplay.push(<RuleBar key={rule.id} data={rule} updateRuleCallback={updateRuleData}/>)
@@ -55,6 +52,8 @@ const RuleTable = () => {
   }
 
   function updateRuleData(data: ruleData){
+    console.log("RuleDataUpdate");
+    console.log(data);
     const ruleToModify: ruleData | undefined = rules.find(rule => rule.id === data.id);
 
     if(ruleToModify){
@@ -65,6 +64,7 @@ const RuleTable = () => {
       ruleToModify.modbusAddress = data.modbusAddress;
       ruleToModify.dataParseStep = data.dataParseStep;
       ruleToModify.apiEndpoint = data.apiEndpoint;
+      localStorage.setItem("rules", JSON.stringify(rules));
     }
   }
 
@@ -73,7 +73,11 @@ const RuleTable = () => {
     localStorage.setItem("port", port);
     localStorage.setItem("clientId", clientId);
     localStorage.setItem("rules", JSON.stringify(rules));
-  }, [ipAddress, port, clientId, rules])
+  }, [ipAddress, port, clientId, rules]);
+
+  useEffect(() => {
+    updateRuleRender()
+  }, [rules.length])
 
   function saveRules(){
     rules.forEach((rule) => {
@@ -115,7 +119,7 @@ const RuleTable = () => {
         <input placeholder="Client Id" value={clientId} onChange={e => setClientId(e.target.value)}></input>
         <button onClick={saveRules}>Save Rules</button>
       </div>
-      <div className="overflow-scroll flex-1">
+      <div className="overflow-y-auto flex-1">
         {rulesDisplay}
       </div>      
     </div>
