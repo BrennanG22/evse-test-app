@@ -6,6 +6,7 @@ import { ruleData } from "./ruleTable";
 interface RuleBarProps {
   data: ruleData;
   updateRuleCallback: (data:ruleData) => void;
+  removeRuleCallback: (id:number) => void;
 }
 
 /**
@@ -13,18 +14,23 @@ interface RuleBarProps {
  * Read rule: Interval (ms), modbus address, transformation step, api to send it to
  * Write rule: Interval (ms), API to call, parse instructions, register to write to
  */
-const RuleBar: React.FC<RuleBarProps> = ({ data, updateRuleCallback }) => {
-
-
+const RuleBar: React.FC<RuleBarProps> = ({ data, updateRuleCallback, removeRuleCallback }) => {
   const [selectedType, setSelectedType] = useState(data.type);
   const [interval, setInterval] = useState(data.interval);
+  const [modbusAddress, setModbusAddress] = useState(data.modbusAddress);
+  const [apiEndpoint, setAPIEndpoint] = useState(data.apiEndpoint);
   const [localData, setLocalData] = useState<ruleData>(data);
+
+  function removeRule(){
+    removeRuleCallback(localData.id);
+  }
 
   useEffect(() => {
     localData.interval = interval;
-    // console.log(localData)
+    localData.modbusAddress = modbusAddress;
+    localData.apiEndpoint = apiEndpoint;
     updateRuleCallback(localData);
-  }, [interval]);
+  }, [interval, modbusAddress, apiEndpoint]);
 
 
   const ruleTypeChange = (event: { target: { value: SetStateAction<string>; }; }) => {
@@ -37,7 +43,6 @@ const RuleBar: React.FC<RuleBarProps> = ({ data, updateRuleCallback }) => {
     <div className="flex items-center bg-slate-300/100 p-3 space-x-2 border-2">
       <div>
         <h3>Rule Status</h3>
-        <h3>{data.apiEndpoint}</h3>
       </div>
       <div>
         <h3>Rule Type</h3>
@@ -52,7 +57,7 @@ const RuleBar: React.FC<RuleBarProps> = ({ data, updateRuleCallback }) => {
       </div>
       <div>
         <h3>Modbus Address</h3>
-        <input className="focus:outline-0"></input>
+        <input className="focus:outline-0" value={modbusAddress} onChange={e => setModbusAddress(e.target.value)}></input>
       </div>
       <div>
         <h3>Data Parse Step</h3>
@@ -62,9 +67,9 @@ const RuleBar: React.FC<RuleBarProps> = ({ data, updateRuleCallback }) => {
       </div>
       <div>
         <h3>API Endpoint</h3>
-        <input className="focus:outline-0"></input>
+        <input className="focus:outline-0" value={apiEndpoint} onChange={e => setAPIEndpoint(e.target.value)}></input>
       </div>
-      <h3>Remove Icon</h3>
+      <button onClick={removeRule}>Remove Rule</button>
     </div>
   );
 }
