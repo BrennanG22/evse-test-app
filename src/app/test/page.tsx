@@ -13,7 +13,7 @@ const ParentComp = () => {
   const [current, setCurrent] = useState<number | null>(null);
   const [voltage, setVoltage] = useState<number | null>(null);
   const [powerLimit, setPowerLimit] = useState<number | null>(null);
-  const [currentPower, setCurrentPower] = useState<number | null>(null);
+  const [currentPower] = useState<number | null>(null);
   let stateSocket: webSocketHelper;
 
   useEffect(() => {

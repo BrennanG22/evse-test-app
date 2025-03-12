@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-const route: string = "";
 
 type ResponseData = {
   message: string

@@ -1,5 +1,4 @@
 import Banner from "@/globalComponents/banner";
-import RuleBar from "./ruleBar";
 import RuleTable from "./ruleTable";
 
 const ParentComp = () => {

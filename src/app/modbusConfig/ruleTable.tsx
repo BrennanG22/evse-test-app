@@ -2,7 +2,6 @@
 
 import { JSX, useEffect, useState } from "react";
 import RuleBar from "./ruleBar";
-import { rule } from "postcss";
 
 export interface ruleData {
   id: number;
@@ -130,6 +129,22 @@ const RuleTable = () => {
       .catch((e) => console.log(e));
   };
 
+  function getRulesFromSource(){
+    fetch("http://localhost:2000/modbus/rules", {
+      method: "GET"
+    }).then((response) => {
+      if(!response.ok){
+        throw new Error("Fetch error")
+      }
+      return response.json()
+    })
+    .then((data) => {
+      if(Array.isArray(data)){
+        setRules(data);
+      }
+    })
+  }
+
   return (
     <div className="flex flex-col h-full">
       <div className="flex space-x-3">
@@ -138,6 +153,7 @@ const RuleTable = () => {
         <input placeholder="Ip Address" value={ipAddress} onChange={e => setIpAddress(e.target.value)}></input>
         <input placeholder="Port" value={port} onChange={e => setPort(e.target.value)}></input>
         <input placeholder="Client Id" value={clientId} onChange={e => setClientId(e.target.value)}></input>
+        <button onClick={getRulesFromSource}>Refresh Rules</button>
         <button onClick={saveRules}>Save Rules</button>
       </div>
       <div className="overflow-y-auto flex-1">
