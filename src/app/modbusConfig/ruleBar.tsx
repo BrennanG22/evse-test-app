@@ -5,8 +5,8 @@ import { ruleData } from "./ruleTable";
 
 interface RuleBarProps {
   data: ruleData;
-  updateRuleCallback: (data:ruleData) => void;
-  removeRuleCallback: (id:number) => void;
+  updateRuleCallback: (data: ruleData) => void;
+  removeRuleCallback: (id: number) => void;
 }
 
 /**
@@ -17,59 +17,82 @@ interface RuleBarProps {
 const RuleBar: React.FC<RuleBarProps> = ({ data, updateRuleCallback, removeRuleCallback }) => {
   const [selectedType, setSelectedType] = useState(data.type);
   const [interval, setInterval] = useState(data.interval);
-  const [modbusAddress, setModbusAddress] = useState(data.modbusAddress);
+  const [modbusRegister, setModbusRegister] = useState(data.modbusRegister);
   const [apiEndpoint, setAPIEndpoint] = useState(data.apiEndpoint);
   const [localData, setLocalData] = useState<ruleData>(data);
 
-  function removeRule(){
+  function removeRule() {
     removeRuleCallback(localData.id);
   }
 
   useEffect(() => {
     localData.interval = interval;
-    localData.modbusAddress = modbusAddress;
+    localData.modbusRegister = modbusRegister;
     localData.apiEndpoint = apiEndpoint;
     updateRuleCallback(localData);
-  }, [interval, modbusAddress, apiEndpoint]);
+  }, [interval, modbusRegister, apiEndpoint]);
 
 
   const ruleTypeChange = (event: { target: { value: SetStateAction<string>; }; }) => {
     setSelectedType(event.target.value);
-    setLocalData((prevData) => {prevData.type = event.target.value.toString(); return prevData})
+    setLocalData((prevData) => { prevData.type = event.target.value.toString(); return prevData })
     updateRuleCallback(localData);
   };
 
   return (
-    <div className="flex items-center bg-slate-300/100 p-3 space-x-2 border-2">
+    <div className="flex items-center bg-gray-100 p-4 space-x-4 border-2 border-gray-300 rounded-lg shadow-md">
       <div>
-        <h3>Rule Status</h3>
+        <h3 className="text-sm font-semibold text-gray-700">Rule Status</h3>
       </div>
       <div>
-        <h3>Rule Type</h3>
-        <select className="w-full" value={selectedType} onChange={ruleTypeChange}>
+        <h3 className="text-sm font-semibold text-gray-700">Rule Type</h3>
+        <select
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          value={selectedType}
+          onChange={ruleTypeChange}
+        >
           <option value="read">Read</option>
           <option value="write">Write</option>
         </select>
       </div>
       <div>
-        <h3>Interval (ms)</h3>
-        <input className="focus:outline-0 w-[7ch]" value={interval} onChange={e => setInterval(e.target.value)}></input>
+        <h3 className="text-sm font-semibold text-gray-700">Interval (ms)</h3>
+        <input
+          className="w-[7ch] px-2 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          value={interval}
+          onChange={(e) => setInterval(e.target.value)}
+        />
       </div>
       <div>
-        <h3>Modbus Address</h3>
-        <input className="focus:outline-0" value={modbusAddress} onChange={e => setModbusAddress(e.target.value)}></input>
+        <h3 className="text-sm font-semibold text-gray-700">Modbus Address</h3>
+        <input
+          className="px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          value={modbusRegister}
+          onChange={(e) => setModbusRegister(e.target.value)}
+        />
       </div>
       <div>
-        <h3>Data Parse Step</h3>
-        <select className="w-full">
+        <h3 className="text-sm font-semibold text-gray-700">Data Parse Step</h3>
+        <select
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
           <option>None</option>
         </select>
       </div>
       <div>
-        <h3>API Endpoint</h3>
-        <input className="focus:outline-0" value={apiEndpoint} onChange={e => setAPIEndpoint(e.target.value)}></input>
+        <h3 className="text-sm font-semibold text-gray-700">API Endpoint</h3>
+        <input
+          className="px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          value={apiEndpoint}
+          onChange={(e) => setAPIEndpoint(e.target.value)}
+        />
       </div>
-      <button onClick={removeRule}>Remove Rule</button>
+      <button
+        onClick={removeRule}
+        className="px-4 py-2 bg-red-600 text-white font-medium rounded-lg shadow-md hover:bg-red-700 transition duration-200"
+      >
+        Remove Rule
+      </button>
     </div>
   );
 }

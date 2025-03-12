@@ -1,6 +1,6 @@
 'use client';
 
-import { JSX, useEffect, useState } from "react";
+import { JSX, use, useEffect, useState } from "react";
 import RuleBar from "./ruleBar";
 
 export interface ruleData {
@@ -9,13 +9,13 @@ export interface ruleData {
   type: string;
   registerType: string;
   interval: string;
-  modbusAddress: string;
+  modbusRegister: string;
   dataParseStep: string;
   apiEndpoint: string;
 }
 
 const RuleTable = () => {
-
+  const [connectionStatus, setConnectionStatus] = useState<string>("Loading...");
 
   const [rulesDisplay, setRulesDisplay] = useState<JSX.Element[]>([]);
   const [rules, setRules] = useState<ruleData[]>(() => {
@@ -35,7 +35,7 @@ const RuleTable = () => {
       type: "read",
       registerType: "holding",
       interval: "",
-      modbusAddress: "",
+      modbusRegister: "",
       dataParseStep: "",
       apiEndpoint: ""
     };
@@ -50,7 +50,10 @@ const RuleTable = () => {
     const tempRulesDisplay: JSX.Element[] = [];
     rules.forEach((rule) => {
       tempRulesDisplay.push(<RuleBar key={rule.id} data={rule} updateRuleCallback={updateRuleData} removeRuleCallback={removeRule} />)
-    })
+    });
+    if (tempRulesDisplay.length === 0) {
+      tempRulesDisplay.push(<h1 key={Date.now()}>Add a rule to get started</h1>)
+    }
     setRulesDisplay(tempRulesDisplay);
   }
 
@@ -61,7 +64,7 @@ const RuleTable = () => {
       ruleToModify.active = data.active;
       ruleToModify.type = data.type;
       ruleToModify.interval = data.interval;
-      ruleToModify.modbusAddress = data.modbusAddress;
+      ruleToModify.modbusRegister = data.modbusRegister;
       ruleToModify.dataParseStep = data.dataParseStep;
       ruleToModify.apiEndpoint = data.apiEndpoint;
       localStorage.setItem("rules", JSON.stringify(rules));
@@ -99,7 +102,7 @@ const RuleTable = () => {
         registerType: rule.registerType,
         active: rule.active,
         interval: rule.interval,
-        modbusRegister: rule.modbusAddress,
+        modbusRegister: rule.modbusRegister,
         apiEndpoint: rule.apiEndpoint
       })
     });
@@ -129,36 +132,124 @@ const RuleTable = () => {
       .catch((e) => console.log(e));
   };
 
-  function getRulesFromSource(){
+  function stopConnection() {
+    fetch("http://localhost:2000/modbus/stopModbusConnection", {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        address: ipAddress,
+        port: port,
+        id: clientId
+      }),
+    })
+      .catch((e) => console.log(e));
+  }
+
+  function getRulesFromSource() {
     fetch("http://localhost:2000/modbus/rules", {
       method: "GET"
     }).then((response) => {
-      if(!response.ok){
+      if (!response.ok) {
         throw new Error("Fetch error")
       }
       return response.json()
     })
-    .then((data) => {
-      if(Array.isArray(data)){
-        setRules(data);
-      }
-    })
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setRules(data);
+          updateRuleRender();
+        }
+      })
   }
+
+  function getStatus() {
+    fetch("http://localhost:2000/modbus/getModbusStatus", {
+      method: "GET"
+    })
+      .then((response) => {
+        if (!response.ok) {
+          setConnectionStatus("Modbus Server Error")
+        }
+        return response.json();
+      })
+      .then((data => {
+        setConnectionStatus(data.modbusConnectionStatus ? "Connection Open" : "Connection Closed");
+      }))
+      .catch(() => { setConnectionStatus("Modbus Server Error") });
+  }
+
+  setInterval(() => getStatus(), 1000);
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex space-x-3">
-        <button onClick={addRule}>Add Rule</button>
-        <button onClick={startConnection}>Start Connection</button>
-        <input placeholder="Ip Address" value={ipAddress} onChange={e => setIpAddress(e.target.value)}></input>
-        <input placeholder="Port" value={port} onChange={e => setPort(e.target.value)}></input>
-        <input placeholder="Client Id" value={clientId} onChange={e => setClientId(e.target.value)}></input>
-        <button onClick={getRulesFromSource}>Refresh Rules</button>
-        <button onClick={saveRules}>Save Rules</button>
+      <div className="flex space-x-3 items-center m-1">
+        <div className="">
+          <h1 className="text-lg font-semibold">Connection Status: </h1>
+          <div className="relative group">
+            <h2 className="transition duration-200">
+              {connectionStatus}
+            </h2>
+            <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 hidden group-hover:block bg-gray-800 delay-500 text-white text-xs rounded-md px-2 py-1 shadow-lg">
+              Check Modbus Server on Error
+            </span>
+          </div>
+        </div>
+        <button
+          onClick={startConnection}
+          className="px-4 py-2 bg-green-600 text-white font-medium rounded-lg shadow-md hover:bg-green-700 transition duration-200"
+        >
+          Start Connection
+        </button>
+        <button
+          onClick={stopConnection}
+          className="px-4 py-2 bg-red-600 text-white font-medium rounded-lg shadow-md hover:bg-red-700 transition duration-200"
+        >
+          Stop Connection
+        </button>
+        <input
+          className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Ip Address"
+          value={ipAddress}
+          onChange={(e) => setIpAddress(e.target.value)}
+        />
+        <input
+          className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Port"
+          value={port}
+          onChange={(e) => setPort(e.target.value)}
+        />
+        <input
+          className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Client Id"
+          value={clientId}
+          onChange={(e) => setClientId(e.target.value)}
+        />
       </div>
-      <div className="overflow-y-auto flex-1">
-        {rulesDisplay}
+      <div className="bg-gray-500 h-0.5 w-full" />
+      <div className="flex space-x-3 m-1">
+        <button
+          onClick={addRule}
+          className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 transition duration-200"
+        >
+          Add Rule
+        </button>
+        <button
+          onClick={getRulesFromSource}
+          className="px-4 py-2 bg-yellow-600 text-white font-medium rounded-lg shadow-md hover:bg-yellow-700 transition duration-200"
+        >
+          Refresh Rules
+        </button>
+        <button
+          onClick={saveRules}
+          className="px-4 py-2 bg-purple-600 text-white font-medium rounded-lg shadow-md hover:bg-purple-700 transition duration-200"
+        >
+          Save Rules
+        </button>
       </div>
+      <div className="bg-black h-1 w-full"></div>
+      <div className="overflow-y-auto flex-1">{rulesDisplay}</div>
     </div>
   )
 }
