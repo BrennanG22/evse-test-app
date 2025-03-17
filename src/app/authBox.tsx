@@ -25,12 +25,12 @@ const AuthBox:React.FC<authBoxProps> = ({currentState}) => {
     }
   }, [currentState]);
 
-  function auth(){
+  function setAuth(authState: boolean){
     fetch("http://localhost:3000/api/auth?outlet=ccs", {
       method: 'POST',
       body: JSON.stringify({
-        user: "Brennan",
-        auth: true,
+        user: "evseTestApp",
+        auth: authState,
         plug_type: "ccs"
       })
     })
@@ -44,8 +44,8 @@ const AuthBox:React.FC<authBoxProps> = ({currentState}) => {
         <option>CCS</option>
       </select>
       <div className="w-full flex items-center">
-        <button className="w-1/2 bg-green-500 rounded-full m-2" onClick={() => auth()}>Auth</button>
-        <button className="w-1/2 bg-red-500 rounded-full m-2">Stop</button>
+        <button className="w-1/2 bg-green-500 rounded-full m-2" onClick={() => setAuth(true)}>Auth</button>
+        <button className="w-1/2 bg-red-500 rounded-full m-2" onClick={() => setAuth(false)}>Stop</button>
       </div>
       <strong>State:</strong>
       <h1>{currentState!==null ? stateText : "Loading..."}</h1>

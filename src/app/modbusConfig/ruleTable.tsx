@@ -93,6 +93,11 @@ const RuleTable = () => {
     updateRuleRender()
   }, [rules.length])
 
+  useEffect(() => {
+    setInterval(() => getStatus(), 1000);
+  }, []);
+
+  
   function saveRules() {
     const sendRules: object[] = [];
     rules.forEach((rule) => {
@@ -165,8 +170,10 @@ const RuleTable = () => {
   }
 
   function getStatus() {
+    console.log("Here");
     fetch("http://localhost:2000/modbus/getModbusStatus", {
-      method: "GET"
+      method: "GET",
+      signal: AbortSignal.timeout(500)
     })
       .then((response) => {
         if (!response.ok) {
@@ -180,7 +187,7 @@ const RuleTable = () => {
       .catch(() => { setConnectionStatus("Modbus Server Error") });
   }
 
-  setInterval(() => getStatus(), 1000);
+  
 
   return (
     <div className="flex flex-col h-full">
