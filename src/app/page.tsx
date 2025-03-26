@@ -17,7 +17,8 @@ const ParentComp = () => {
   let stateSocket: webSocketHelper;
 
   useEffect(() => {
-    stateSocket = new webSocketHelper("ws://10.20.27.100/api/outlets/ccs/statestream", newMessageCallback);
+    console.assert(process.env.WEBSOCKET_URL, "Missing WEBSOCKET_URL in config");
+    stateSocket = new webSocketHelper(process.env.WEBSOCKET_URL ?? "", newMessageCallback, errorMessageCallback);
     return () => {
       stateSocket.closeSocket();
     }
@@ -33,11 +34,15 @@ const ParentComp = () => {
     //Set current power;
   }
 
+  function errorMessageCallback() {
+    
+  }
+
 
   return (
     <div>
       <Banner/>
-      <div className="w-full flex">
+      <div className="w-full flex justify-center">
         <MonitorContainer name="Auth Settings">
           <AuthBox currentState={currentState} />
         </MonitorContainer>

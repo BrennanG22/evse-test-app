@@ -19,7 +19,6 @@ const AuthBox:React.FC<authBoxProps> = ({currentState}) => {
   const [stateText, setStateText] = useState<string | null>(null);
 
   useEffect(() => {
-    console.log(stateMap);
     if(currentState != null){
       setStateText(stateMap[currentState-1])
     }

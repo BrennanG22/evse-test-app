@@ -43,7 +43,6 @@ const RuleTable = () => {
       const newRules = prevRules.concat(tempRule);
       return newRules;
     });
-    // setRulesDisplay((prevRules) => [...prevRules, <RuleBar key={tempRule.id} data={tempRule} updateRuleCallback={updateRuleData}/>]);
   }
 
   function updateRuleRender() {
@@ -111,7 +110,7 @@ const RuleTable = () => {
         apiEndpoint: rule.apiEndpoint
       })
     });
-    fetch("http://localhost:2000/modbus/setRules", {
+    fetch(process.env.MODBUS_SERVER + "/modbus/setRules", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -123,7 +122,7 @@ const RuleTable = () => {
   }
 
   function startConnection() {
-    fetch("http://localhost:2000/modbus/getModbusConnection", {
+    fetch(process.env.MODBUS_SERVER + "/modbus/getModbusConnection", {
       method: "POST",
       headers: {
         'Content-Type': 'application/json',
@@ -138,7 +137,7 @@ const RuleTable = () => {
   };
 
   function stopConnection() {
-    fetch("http://localhost:2000/modbus/stopModbusConnection", {
+    fetch(process.env.MODBUS_SERVER + "/modbus/stopModbusConnection", {
       method: "POST",
       headers: {
         'Content-Type': 'application/json',
@@ -153,7 +152,7 @@ const RuleTable = () => {
   }
 
   function getRulesFromSource() {
-    fetch("http://localhost:2000/modbus/rules", {
+    fetch(process.env.MODBUS_SERVER + "/modbus/rules", {
       method: "GET"
     }).then((response) => {
       if (!response.ok) {
@@ -171,7 +170,7 @@ const RuleTable = () => {
 
   function getStatus() {
     console.log("Here");
-    fetch("http://localhost:2000/modbus/getModbusStatus", {
+    fetch(process.env.MODBUS_SERVER + "/modbus/getModbusStatus", {
       method: "GET",
       signal: AbortSignal.timeout(500)
     })

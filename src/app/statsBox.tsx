@@ -7,11 +7,11 @@ interface StatsBoxProps {
 
 const StatsBox: React.FC<StatsBoxProps> = ({ current, voltage, powerLimit, currentPower}) => {
   return (
-    <div className="grid grid-cols-2 gap-4">
-      <h1>Current: {current}</h1>
-      <h1>Voltage: {voltage}</h1>
-      <h1>Power Limit: {powerLimit}</h1>
-      <h1>Current Power: {currentPower}</h1>
+    <div className="grid grid-cols-2 gap-4 text-center p-2">
+      <h1>Current: <br/> {current ?? "Loading..."}</h1>
+      <h1>Voltage: <br/> {voltage ?? "Loading..."}</h1>
+      <h1>Power Limit: <br/> {powerLimit ?? "Loading..."}</h1>
+      <h1>Current Power: <br/> {currentPower ?? "Loading..."}</h1>
     </div>
   );
 }
