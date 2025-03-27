@@ -20,10 +20,10 @@ const CANTable = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       updateData();
-    }, 500);
+    }, 5000);
     const statusInterval = setInterval(() => {
       updateStatus();
-    }, 2000)
+    }, 10000)
     return () => {clearInterval(interval); clearInterval(statusInterval)};
   }, []);
 
@@ -39,7 +39,7 @@ const CANTable = () => {
   }
 
   async function updateStatus(){
-    const response = await fetch(`${process.env.MODBUS_SERVER}/testCAN`);
+    const response = await fetch(`${process.env.MODBUS_SERVER}/proxy/api/system/can/can1`);
     if(!response.ok){
       setCanStatusColour("bg-red-500");
       setCanStatusMessage("Status: Offline");
@@ -102,7 +102,7 @@ const CANTable = () => {
 
 async function fetchData(): Promise<canData[]> {
   const logRegex: RegExp = /\(([\d.]+)\)\s+can1\s+(0x[0-9a-fA-F]+)\s+\[8\]\s+([A-Za-z\d\s]+)/g
-  const CANResponse = await fetch("http://localhost:2000/testCan");
+  const CANResponse = await fetch(process.env.MODBUS_SERVER + "/proxy/api/system/can/can1");
 
   const data = await CANResponse.text();
   let match: RegExpExecArray | null;

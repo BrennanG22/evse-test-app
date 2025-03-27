@@ -1,6 +1,4 @@
-'use client';
 
-import { useState } from "react";
 import { canData } from "./canTable";
 
 const CANEntry: React.FC<canData> = ({ time, canID, dataBytes }) => {

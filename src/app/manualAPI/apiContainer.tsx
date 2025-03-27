@@ -21,7 +21,8 @@ const APIContainer = () => {
   })
 
   function executeAPI(data: apiData) {
-
+    data = data;
+    console.log(data);
   }
 
   return (

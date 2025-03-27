@@ -1,3 +1,4 @@
+import Link from 'next/link'
 
 const Banner = () => {
   return (
@@ -6,18 +7,18 @@ const Banner = () => {
         <h1 className="text-3xl font-bold text-white">EVSE Test Software</h1>
       </div>
       <nav className="ml-6 flex space-x-6 text-lg">
-        <a href="/" className="text-white text-center hover:text-blue-300 transition">
+        <Link href="/" className="text-white text-center hover:text-blue-300 transition">
           Status<br />Monitor
-        </a>
-        <a href="/canMonitor" className="text-white text-center hover:text-blue-300 transition">
+        </Link>
+        <Link href="/canMonitor" className="text-white text-center hover:text-blue-300 transition">
           CAN<br />Monitor
-        </a>
-        <a href="/modbusConfig" className="text-white text-center content-center hover:text-blue-300 transition">
+        </Link>
+        <Link href="/modbusConfig" className="text-white text-center content-center hover:text-blue-300 transition">
           Modbus <br />Configuration
-        </a>
-        <a href="/manualAPI" className="text-white text-center content-center hover:text-blue-300 transition">
+        </Link>
+        <Link href="/manualAPI" className="text-white text-center content-center hover:text-blue-300 transition">
           Manual <br /> API
-        </a>
+        </Link>
       </nav>
     </div>
   );

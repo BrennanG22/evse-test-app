@@ -1,6 +1,6 @@
 'use client';
 
-import { JSX, use, useEffect, useState } from "react";
+import { JSX, useEffect, useState } from "react";
 import RuleBar from "./ruleBar";
 
 export interface ruleData {
