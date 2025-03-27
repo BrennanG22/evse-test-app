@@ -17,7 +17,7 @@ const APIContainer = () => {
   const data: apiData[] = readAPIConfigFile() ?? [];
   const tempRender: JSX.Element[] = [];
   data.forEach((data) => {
-    tempRender.push(<APIEntry key={data.apiName} data={data} executeCallback={executeAPI} />)
+    tempRender.push(<APIEntry key={data.apiName} data={data} />)
   })
 
   function executeAPI(data: apiData) {

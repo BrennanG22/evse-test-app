@@ -1,15 +1,15 @@
-import Banner from "@/globalComponents/banner";
-import CANTable from "./canTable";
+import Banner from '@/globalComponents/banner';
+import CANTable from './canTable';
 
-const CANMonitor = () => {
+
+const Page = () => {
   return (
     <div>
       <Banner />
       <div className="m-4">
         <CANTable />
       </div>
-    </div>
-  )
-}
+    </div>)
+};
 
-export default CANMonitor;
+export default Page;
