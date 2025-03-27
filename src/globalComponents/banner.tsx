@@ -13,7 +13,10 @@ const Banner = () => {
           CAN<br />Monitor
         </a>
         <a href="/modbusConfig" className="text-white text-center content-center hover:text-blue-300 transition">
-          Modbus <br/>Configuration
+          Modbus <br />Configuration
+        </a>
+        <a href="/manualAPI" className="text-white text-center content-center hover:text-blue-300 transition">
+          Manual <br /> API
         </a>
       </nav>
     </div>
