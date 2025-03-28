@@ -1,7 +1,7 @@
 'use client';
 
 import { apiData } from "@/app/manualAPI/apiContainer";
-import { KeyboardEventHandler, useState } from "react";
+import { KeyboardEvent, useState } from "react";
 
 interface apiEntryProps {
   data: apiData;
@@ -11,17 +11,18 @@ const APIEntry: React.FC<apiEntryProps> = ({ data }) => {
 
   const [bodyText, setBodyText] = useState<string>("");
 
-  const handleKeyDown = (e: any) => {
+  const handleKeyDown = (e:KeyboardEvent<HTMLTextAreaElement>) => {
     console.log(e);
     if (e.key === "Tab") {
       e.preventDefault();
-      const { selectionStart, selectionEnd } = e.target;
+      const selectionStart = e.currentTarget.selectionStart;
+      const selectionEnd = e.currentTarget.selectionEnd;
       const newValue = bodyText.substring(0, selectionStart) + "\t" + bodyText.substring(selectionEnd);
       setBodyText(newValue);
 
       // Move cursor forward after tab insertion
       setTimeout(() => {
-        e.target.selectionStart = e.target.selectionEnd = selectionStart + 1;
+        e.currentTarget.selectionStart = e.currentTarget.selectionEnd = selectionStart + 1;
       }, 0);
     }
   };
@@ -49,7 +50,7 @@ const APIEntry: React.FC<apiEntryProps> = ({ data }) => {
           <h1 className="text-lg font-semibold text-slate-800">Body</h1>
           <textarea className="w-full leading-tight mt-2 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-500 transition" rows={5}
           onChange={(e) => setBodyText(e.target.value)}
-          onKeyDown={handleKeyDown} value={bodyText}/>
+          onKeyDown={(e) => handleKeyDown(e)} value={bodyText}/>
           <div className="flex space-x-3 mt-4">
             <button className="px-3 py-2 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 transition"
               onClick={startCallback}>

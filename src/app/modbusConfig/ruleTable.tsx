@@ -93,7 +93,8 @@ const RuleTable = () => {
   }, [rules.length])
 
   useEffect(() => {
-    setInterval(() => getStatus(), 1000);
+    const activeInterval = setInterval(() => getStatus(), 1000)
+    return(()=>{clearInterval(activeInterval)});
   }, []);
 
   
