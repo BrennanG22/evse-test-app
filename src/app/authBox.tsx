@@ -22,7 +22,7 @@ const AuthBox:React.FC<authBoxProps> = ({currentState}) => {
     if(currentState != null){
       setStateText(stateMap[currentState-1])
     }
-  }, [currentState]);
+  }, [currentState, stateMap]);
 
   function setAuth(authState: boolean){
     fetch("http://localhost:3000/api/auth?outlet=ccs", {

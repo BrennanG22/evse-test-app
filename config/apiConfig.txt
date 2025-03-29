@@ -1,10 +1,32 @@
 [
   {
     "apiName": "Test",
-    "apiDescription": "Description of Test API"
+    "apiDescription": "Description of Test API",
+    "endpoint": "http://localhost:2000/testCan"
   },
   {
-    "apiName": "Test4",
-    "apiDescription": "Test of second api"
-  } 
+    "apiName": "/chargeState",
+    "apiDescription": "Returns if the EVSE is charging",
+    "endpoint": "http://localhost:2000/api/chargeState"
+  },
+  {
+    "apiName": "/batteryCapacity",
+    "apiDescription": "Returns battery capacity of connected EV",
+    "endpoint": "http://localhost:2000/api/batteryCapacity"
+  },
+  {
+    "apiName": "/soc",
+    "apiDescription": "Returns the state of charge of connected EV",
+    "endpoint": "http://localhost:2000/api/soc"
+  },
+  {
+    "apiName": "/voltage",
+    "apiDescription": "Returns the output voltage of the EVSE",
+    "endpoint": "http://localhost:2000/api/voltage"
+  },
+  {
+    "apiName": "/current",
+    "apiDescription": "Returns the output current of the EVSE",
+    "endpoint": "http://localhost:2000/api/current"
+  }
 ]

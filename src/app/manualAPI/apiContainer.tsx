@@ -18,8 +18,10 @@ export interface apiData {
 export default async function APIContainer() {
   const data: apiData[] = await readAPIConfigFile() ?? [];
   const tempRender: JSX.Element[] = [];
+  let id = 0;
   data.forEach((data) => {
-    tempRender.push(<APIEntry key={data.apiName} data={data} />)
+    tempRender.push(<APIEntry key={id} data={data} />)
+    id++;
   })
 
   return (

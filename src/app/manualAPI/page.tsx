@@ -1,11 +1,15 @@
 import Banner from "@/globalComponents/banner";
 import APIContainer from "./apiContainer";
 
-const manualAPI = () => {
+export const dynamic = "force-dynamic";
+
+function manualAPI() {
   return (
     <div>
-      <Banner />
-      <div className="m-10">
+      <div className="sticky top-0">
+        <Banner />
+      </div>
+      <div className="m-10 ">
         <APIContainer />
       </div>
 
