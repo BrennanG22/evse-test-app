@@ -16,6 +16,7 @@ export interface ruleData {
 
 const RuleTable = () => {
   const [connectionStatus, setConnectionStatus] = useState<string>("Loading...");
+  const [modbusConnectionError, setModbusConnectionError] = useState<boolean>(false);
 
   const [rulesDisplay, setRulesDisplay] = useState<JSX.Element[]>([]);
   const [rules, setRules] = useState<ruleData[]>(() => {
@@ -94,10 +95,10 @@ const RuleTable = () => {
 
   useEffect(() => {
     const activeInterval = setInterval(() => getStatus(), 1000)
-    return(()=>{clearInterval(activeInterval)});
+    return (() => { clearInterval(activeInterval) });
   }, []);
 
-  
+
   function saveRules() {
     const sendRules: object[] = [];
     rules.forEach((rule) => {
@@ -111,7 +112,7 @@ const RuleTable = () => {
         apiEndpoint: rule.apiEndpoint
       })
     });
-    fetch(process.env.MODBUS_SERVER + "/modbus/setRules", {
+    fetch(process.env.NEXT_PUBLIC_MODBUS_SERVER + "/modbus/setRules", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -123,7 +124,7 @@ const RuleTable = () => {
   }
 
   function startConnection() {
-    fetch(process.env.MODBUS_SERVER + "/modbus/getModbusConnection", {
+    fetch(process.env.NEXT_PUBLIC_MODBUS_SERVER + "/modbus/getModbusConnection", {
       method: "POST",
       headers: {
         'Content-Type': 'application/json',
@@ -138,7 +139,7 @@ const RuleTable = () => {
   };
 
   function stopConnection() {
-    fetch(process.env.MODBUS_SERVER + "/modbus/stopModbusConnection", {
+    fetch(process.env.NEXT_PUBLIC_MODBUS_SERVER + "/modbus/stopModbusConnection", {
       method: "POST",
       headers: {
         'Content-Type': 'application/json',
@@ -153,7 +154,7 @@ const RuleTable = () => {
   }
 
   function getRulesFromSource() {
-    fetch(process.env.MODBUS_SERVER + "/modbus/rules", {
+    fetch(process.env.NEXT_PUBLIC_MODBUS_SERVER + "/modbus/rules", {
       method: "GET"
     }).then((response) => {
       if (!response.ok) {
@@ -170,24 +171,25 @@ const RuleTable = () => {
   }
 
   function getStatus() {
-    console.log("Here");
-    fetch(process.env.MODBUS_SERVER + "/modbus/getModbusStatus", {
+    fetch(process.env.NEXT_PUBLIC_MODBUS_SERVER + "/modbus/getModbusStatus", {
       method: "GET",
       signal: AbortSignal.timeout(500)
     })
       .then((response) => {
         if (!response.ok) {
-          setConnectionStatus("Modbus Server Error")
+          setConnectionStatus("Modbus Server Error");
+          setModbusConnectionError(true);
         }
         return response.json();
       })
       .then((data => {
         setConnectionStatus(data.modbusConnectionStatus ? "Connection Open" : "Connection Closed");
+        setModbusConnectionError(false);
       }))
-      .catch(() => { setConnectionStatus("Modbus Server Error") });
+      .catch(() => { setConnectionStatus("Modbus Server Error"); setModbusConnectionError(true) });
   }
 
-  
+
 
   return (
     <div className="flex flex-col h-full">
@@ -198,9 +200,11 @@ const RuleTable = () => {
             <h2 className="transition duration-200">
               {connectionStatus}
             </h2>
-            <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 hidden group-hover:block bg-gray-800 delay-500 text-white text-xs rounded-md px-2 py-1 shadow-lg">
-              Check Modbus Server on Error
-            </span>
+            {modbusConnectionError && (
+              <span className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-800 delay-500 text-white text-xs rounded-md px-2 py-1 shadow-lg">
+                Error connecting to the Modbus Server, ensure the server is running on the local machine
+              </span>)}
+
           </div>
         </div>
         <button

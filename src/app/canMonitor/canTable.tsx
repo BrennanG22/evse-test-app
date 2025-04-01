@@ -39,7 +39,7 @@ const CANTable = () => {
   }
 
   async function updateStatus(){
-    const response = await fetch(`${process.env.MODBUS_SERVER}/proxy/api/system/can/can1`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_MODBUS_SERVER}/proxy/api/system/can/can1`);
     if(!response.ok){
       setCanStatusColour("bg-red-500");
       setCanStatusMessage("Status: Offline");
@@ -102,7 +102,7 @@ const CANTable = () => {
 
 async function fetchData(): Promise<canData[]> {
   const logRegex: RegExp = /\(([\d.]+)\)\s+can1\s+(0x[0-9a-fA-F]+)\s+\[8\]\s+([A-Za-z\d\s]+)/g
-  const CANResponse = await fetch(process.env.MODBUS_SERVER + "/proxy/api/system/can/can1");
+  const CANResponse = await fetch(process.env.NEXT_PUBLIC_MODBUS_SERVER + "/proxy/api/system/can/can1");
 
   const data = await CANResponse.text();
   let match: RegExpExecArray | null;
@@ -121,7 +121,7 @@ async function fetchData(): Promise<canData[]> {
 }
 
   function startCAN(){
-    fetch(process.env.MODBUS_SERVER + "/proxy/api/system/can/can1", {
+    fetch(process.env.NEXT_PUBLIC_MODBUS_SERVER + "/proxy/api/system/can/can1", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -131,7 +131,7 @@ async function fetchData(): Promise<canData[]> {
   }
 
   function stopCAN(){
-    fetch(process.env.MODBUS_SERVER + "/proxy/api/system/can/can1", {
+    fetch(process.env.NEXT_PUBLIC_MODBUS_SERVER + "/proxy/api/system/can/can1", {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

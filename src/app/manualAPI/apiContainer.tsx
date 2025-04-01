@@ -9,10 +9,10 @@ export interface apiData {
   apiName: string;
   apiDescription: string;
   apiExample?: string;
+  apiParameters?: string;
   endpoint: string;
   method: string;
   headers: JSON;
-  bodyType: string;
 }
 
 export default async function APIContainer() {

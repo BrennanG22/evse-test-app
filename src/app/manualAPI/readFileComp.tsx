@@ -6,7 +6,8 @@ import * as fs from 'fs';
 
 export async function readAPIConfigFile(): Promise<apiData[] | null> {
 
-  console.assert(process.env.API_CONFIG_PATH, "Missing API_CONFIG_PATH")
+  console.assert(process.env.API_CONFIG_PATH, "Missing API_CONFIG_PATH");
+  console.log(process.env.API_CONFIG_PATH);
   try {
     const filePath = path.resolve(process.env.API_CONFIG_PATH ?? "");
     const fileOutput = fs.readFileSync(filePath ?? "", 'utf-8');
